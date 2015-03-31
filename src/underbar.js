@@ -197,7 +197,6 @@
 
 
   // Determine whether all of the elements match a truth test.
-  //still has problems with ALL truthy values, for some odd reason
   _.every = function(collection, iterator) {
     // TIP: Try re-using reduce() here.
     var test = iterator || _.identity;
@@ -206,7 +205,7 @@
       if (!passedTest) {
         return false;
       }
-      return test(item) == true;
+      return test(item) ? true : false;
     }, true);
   };
 
@@ -214,11 +213,15 @@
   // provided, provide a default one
   _.some = function(collection, iterator) {
     // TIP: There's a very clever way to re-use every() here.
+      //I know, but I ain't that clever.
     var test = iterator || _.identity;
 
-    return _.every(collection, function(item) {
-      return test(item) === false;
-    })
+    return _.reduce(collection, function(passedTest, item) {
+      if (passedTest) {
+        return true;
+      }
+      return test(item) ? true : false;
+    }, false);
   };
 
 
@@ -335,6 +338,7 @@
   // input array. For a tip on how to make a copy of an array, see:
   // http://mdn.io/Array.prototype.slice
   _.shuffle = function(array) {
+
   };
 
 
