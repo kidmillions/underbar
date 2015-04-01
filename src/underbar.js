@@ -309,11 +309,34 @@
   // instead if possible.
   _.memoize = function(func) {
     var result;
+    var oldArgs = [];
+    var calledWithArguments = false;
+
     return function() {
-      if(typeof result  == "undefined") {
-        result = func.apply(this, arguments);   
+      var args = Array.prototype.slice.call(arguments);
+
+      function compareArrays(array1, array2) {
+        if (array1 === array2) return true;
+        if (array1 == null || array2 == null) return false;
+        if (array1.length != array2.length) return false;
+        for (var i = 0; i < array1.length; ++i) {
+          if (array1[i] !== array2[i]) return false;
+        }
+        return true;
       }
-      return result;
+
+
+      for (var i = 0; i < oldArgs.length; i++) {
+        if (compareArrays(oldArgs[i], args)) {
+          calledWithArguments = true;
+        }
+      }
+
+      if(!calledWithArguments) {
+        result = func.apply(this, arguments);
+        oldArgs.push(args); 
+      }
+      return result;  
     };
   };
 
