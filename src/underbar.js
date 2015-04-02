@@ -313,8 +313,10 @@
     var calledWithArguments = false;
 
     return function() {
+      //turn arguments object into array
       var args = Array.prototype.slice.call(arguments);
 
+      //helper function to compare old and new arguments for equality
       function compareArrays(array1, array2) {
         if (array1 === array2) return true;
         if (array1 == null || array2 == null) return false;
@@ -325,13 +327,14 @@
         return true;
       }
 
-
+      //loop thru old arguments to see if arguments have been called before
       for (var i = 0; i < oldArgs.length; i++) {
         if (compareArrays(oldArgs[i], args)) {
           calledWithArguments = true;
         }
       }
 
+      //apply function and add to old arguments array
       if(!calledWithArguments) {
         result = func.apply(this, arguments);
         oldArgs.push(args); 
@@ -347,6 +350,12 @@
   // parameter. For example _.delay(someFunction, 500, 'a', 'b') will
   // call someFunction('a', 'b') after 500ms
   _.delay = function(func, wait) {
+    if (arguments.length > 2) {
+      var args = Array.prototype.slice.call(arguments).slice(2, arguments.length);
+    }
+    setTimeout(function() {
+      func.apply(this, args);
+    }, wait);
   };
 
 
@@ -361,7 +370,12 @@
   // input array. For a tip on how to make a copy of an array, see:
   // http://mdn.io/Array.prototype.slice
   _.shuffle = function(array) {
-
+    var newArray = [];
+    for (var i = 0; i < array.length; i++) {
+      var randomNum = Math.floor(Math.random * newArray.length)
+      newArray.splice(randomNum, 0, array[i]);
+    }
+    return newArray;
   };
 
 
