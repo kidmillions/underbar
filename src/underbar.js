@@ -211,10 +211,11 @@
 
   // Determine whether any of the elements pass a truth test. If no iterator is
   // provided, provide a default one
-  _.some = function(collection, iterator) {
+  // _.some = function(collection, iterator) {
     // TIP: There's a very clever way to re-use every() here.
       //I know, but I ain't that clever.
-    var test = iterator || _.identity;
+   _.some = function(collection, iterator) {
+  var test = iterator || _.identity;
 
     return _.reduce(collection, function(passedTest, item) {
       if (passedTest) {
@@ -375,6 +376,16 @@
       var randomNum = Math.floor(Math.random * newArray.length)
       newArray.splice(randomNum, 0, array[i]);
     }
+    
+
+    var identical = _.every(newArray, function(item) {
+      var i = _.indexOf(newArray, item);
+      return item === array[i];
+    })
+    if (identical) {
+      _.shuffle(newArray);
+    }
+    
     return newArray;
   };
 
@@ -390,6 +401,7 @@
   // Calls the method named by functionOrKey on each value in the list.
   // Note: You will need to learn a bit about .apply to complete this.
   _.invoke = function(collection, functionOrKey, args) {
+    return functionOrKey.apply(collection, args);
   };
 
   // Sort the object's values by a criterion produced by an iterator.
